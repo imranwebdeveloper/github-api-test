@@ -19,17 +19,19 @@ const getData = async (
     // Today date
     const today = new Date().toISOString().split("T")[0].toString();
     // Yesterday date
-    const yesterday = new Date(Date.now() - 86400000)
-      .toISOString()
-      .split("T")[0]
-      .toString();
+
     // gat all commits from repo
     const response = await octokit.rest.repos.listCommits({
       owner,
       repo,
       path: "data",
     });
+    const yesterday = new Date(response.data[10].commit.author?.date as any)
+      .toISOString()
+      .split("T")[0]
+      .toString();
 
+    console.log(yesterday, today);
     // filtered today changes file from all commits
     const todayChangedFiles = getChangeFiles(response.data, today);
     // filtered yesterday changes file from all commits
